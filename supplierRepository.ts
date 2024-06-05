@@ -1,10 +1,12 @@
+import { Maybe } from "./maybe.monad.ts";
+
 export type Supplier = {
   id: number;
   name: string;
 };
 
 export interface SupplierRepository {
-  findById: (id: number) => Supplier;
+  findById: (id: number) => Maybe<Supplier>;
 }
 
 export const supplierRepository: SupplierRepository = {
@@ -16,6 +18,6 @@ export const supplierRepository: SupplierRepository = {
     ];
 
     const res = suppliers.filter((s) => s.id === id);
-    return res[0] ?? null;
+    return res[0] ? Maybe.of(res[0]) : Maybe.tyhjä();
   },
 };

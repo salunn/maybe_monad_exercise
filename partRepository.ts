@@ -1,3 +1,5 @@
+import { Maybe } from "./maybe.monad.ts";
+
 export type Part = {
   id: number;
   name: string;
@@ -5,7 +7,7 @@ export type Part = {
 };
 
 export interface PartRepository {
-  findById: (id: number) => Part;
+  findById: (id: number) => Maybe<Part>;
 }
 
 export const partRepository: PartRepository = {
@@ -18,6 +20,6 @@ export const partRepository: PartRepository = {
     ];
 
     const res = parts.filter((p) => p.id === id);
-    return res[0] ?? null;
+    return res[0] ? Maybe.of(res[0]) : Maybe.tyhjä();
   },
 };
