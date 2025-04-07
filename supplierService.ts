@@ -1,5 +1,6 @@
+import { Maybe } from "./maybe.monad";
 import { PartRepository } from "./partRepository";
-import { SupplierRepository } from "./supplierRepository";
+import { Supplier, SupplierRepository } from "./supplierRepository";
 
 export function getSupplierName(
   partId: string,
@@ -7,12 +8,12 @@ export function getSupplierName(
   supplierRepository: SupplierRepository
 ) {
   if (partId) {
-    const part = partRepository.findById(parseInt(partId));
-    if (part && part.supplierId) {
-      const supplier = supplierRepository.findById(part.supplierId);
-      if (supplier) {
-        return supplier.name;
-      }
-    }
+    return partRepository.findById(parseInt(partId))
+      .flatMap(part => part.supplierId 
+      ? supplierRepository.findById(part.supplierId)
+      : Maybe.nothing<Supplier>()
+      )
+      .map(supplier => supplier.name)
+      .getOrElse("");
   }
 }
